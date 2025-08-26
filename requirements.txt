@@ -1,0 +1,19 @@
+# Core numerical and data handling
+numpy
+pandas
+scipy
+
+# Machine Learning
+scikit-learn
+
+# Image Processing
+opencv-python
+scikit-image
+
+# Visualization
+matplotlib
+seaborn
+
+# Utilities
+tqdm
+joblib
