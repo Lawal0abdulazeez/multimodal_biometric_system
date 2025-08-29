@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.svm import SVC
 from sklearn.model_selection import cross_val_score
 import joblib
+from collections import Counter
 
 from src.optimizers.ecgwo import EnhancedChaoticGWO
 
@@ -55,9 +56,16 @@ class ECGWO_SVM:
         
         # Use a default SVM for evaluating this feature subset
         temp_svm = SVC(C=1.0, gamma='scale') # Default parameters
-        
-        # Use 3-fold cross-validation for a robust error estimate
-        accuracies = cross_val_score(temp_svm, X_subset, y, cv=3)
+
+        # === ADD THIS ROBUST LOGIC ===
+        min_class_count = min(Counter(y).values())
+        # The number of folds cannot be greater than the number of samples in the smallest class.
+        # It must also be at least 2.
+        n_splits = max(2, min_class_count) 
+        # =============================
+
+        # Use 2-fold cross-validation for a robust error estimate
+        accuracies = cross_val_score(temp_svm, X_subset, y, cv=n_splits)
         classification_error = 1.0 - np.mean(accuracies)
         
         feature_ratio = num_selected_features / X.shape[1]
@@ -80,8 +88,16 @@ class ECGWO_SVM:
         # Create an SVM with these parameters
         temp_svm = SVC(C=C, gamma=gamma)
         
-        # Use 3-fold cross-validation for a robust error estimate
-        accuracies = cross_val_score(temp_svm, X, y, cv=3)
+
+        # === ADD THIS ROBUST LOGIC ===
+        min_class_count = min(Counter(y).values())
+        # The number of folds cannot be greater than the number of samples in the smallest class.
+        # It must also be at least 2.
+        n_splits = max(2, min_class_count) 
+        # =============================
+
+        # Use n_splits for cross-validation
+        accuracies = cross_val_score(temp_svm, X, y, cv=n_splits)
         classification_error = 1.0 - np.mean(accuracies)
         
         return classification_error

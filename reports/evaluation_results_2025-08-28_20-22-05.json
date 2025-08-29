@@ -1,0 +1,29 @@
+{
+    "ecgwo_svm": {
+        "accuracy": 0.4752475247524752,
+        "precision": 0.3677826711242553,
+        "far_at_50": 0.0,
+        "frr_at_50": 1.0,
+        "eer": 0.5744047619047619,
+        "model_params": {
+            "num_selected_features": 71,
+            "total_features": 148,
+            "best_c": 81.59770452838052,
+            "best_gamma": 0.5737443695751853
+        }
+    },
+    "svm_default": {
+        "accuracy": 0.5198019801980198,
+        "precision": 0.3897886217193147,
+        "far_at_50": 0.0,
+        "frr_at_50": 1.0,
+        "eer": 0.719528399668325
+    },
+    "random_forest": {
+        "accuracy": 0.6732673267326733,
+        "precision": 0.6307755775577557,
+        "far_at_50": 0.0,
+        "frr_at_50": 0.9821428571428571,
+        "eer": 0.08749459547500592
+    }
+}

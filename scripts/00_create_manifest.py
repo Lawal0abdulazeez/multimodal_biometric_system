@@ -116,30 +116,24 @@ def create_manifest(data_split):
 
     return final_df
 
+    pass
 
 if __name__ == "__main__":
     # Ensure output directory exists
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Create and save manifests
+    # Create manifests for both splits
     train_manifest = create_manifest('train')
     test_manifest = create_manifest('test')
     
-    # Only save if the manifest is not empty
-    if not train_manifest.empty:
-        train_manifest.to_csv(OUTPUT_DIR / 'train_manifest.csv', index=False)
-        print("\nTraining manifest created successfully:")
-        print(f" - {OUTPUT_DIR / 'train_manifest.csv'}")
-        print("\nSample of training manifest:")
-        print(train_manifest.head())
+    # --- NEW: Combine into a single master manifest ---
+    if train_manifest.empty or test_manifest.empty:
+        print("Could not create master manifest because one of the splits was empty.")
     else:
-        print("\nTraining manifest was not created because no complete samples were found.")
-
-    if not test_manifest.empty:
-        test_manifest.to_csv(OUTPUT_DIR / 'test_manifest.csv', index=False)
-        print("\nTesting manifest created successfully:")
-        print(f" - {OUTPUT_DIR / 'test_manifest.csv'}")
-        print("\nSample of testing manifest:")
-        print(test_manifest.head())
-    else:
-        print("\nTesting manifest was not created because no complete samples were found.")
+        master_manifest = pd.concat([train_manifest, test_manifest], ignore_index=True)
+        master_manifest.to_csv(OUTPUT_DIR / 'master_manifest.csv', index=False)
+        print("\nMaster manifest created successfully:")
+        print(f" - {OUTPUT_DIR / 'master_manifest.csv'}")
+        print(f"Total complete samples found: {len(master_manifest)}")
+        print("\nSample of master manifest:")
+        print(master_manifest.head())
