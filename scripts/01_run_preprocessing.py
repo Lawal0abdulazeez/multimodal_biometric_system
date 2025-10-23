@@ -46,11 +46,53 @@ if __name__ == "__main__":
     print(f"Labels encoded. Found {len(le.classes_)} unique classes.")
     
     print("\n--- Performing Stratified Train-Test Split ---")
-    # Split the data into 80% train and 20% test
-    # stratify=y_all ensures that the class distribution is the same in train and test sets
-    X_train, X_test, y_train, y_test = train_test_split(
-        X_all, y_all, test_size=0.40, random_state=42, stratify=y_all
-    )
+    # Split the data into 60% train and 40% test
+    # Handle classes with only one sample: scikit-learn's stratify requires at least 2
+    # samples per class. We'll place singleton classes into the training set and
+    # perform a stratified split on the remaining data. If stratification is still
+    # not possible (very small remaining set), fall back to a regular split.
+    test_size = 0.40
+
+    # Identify singleton classes (in the encoded labels)
+    unique, counts = np.unique(y_all, return_counts=True)
+    singleton_classes = unique[counts == 1]
+
+    if len(singleton_classes) > 0:
+        # Indices of samples that belong to singleton classes
+        singleton_mask = np.isin(y_all, singleton_classes)
+        non_singleton_mask = ~singleton_mask
+
+        # Put singletons into training set
+        X_singletons = X_all[singleton_mask]
+        y_singletons = y_all[singleton_mask]
+
+        # Data eligible for stratified split
+        X_rest = X_all[non_singleton_mask]
+        y_rest = y_all[non_singleton_mask]
+
+        # If there is enough data to stratify, do so; otherwise fallback
+        try:
+            X_rest_train, X_rest_test, y_rest_train, y_rest_test = train_test_split(
+                X_rest, y_rest, test_size=test_size, random_state=42, stratify=y_rest
+            )
+            # Combine rest-train with singletons to form final training set
+            X_train = np.vstack([X_rest_train, X_singletons]) if len(X_rest_train) > 0 else X_singletons
+            y_train = np.concatenate([y_rest_train, y_singletons]) if len(y_rest_train) > 0 else y_singletons
+            X_test = X_rest_test
+            y_test = y_rest_test
+            print(f"Stratified split performed on non-singleton classes. Singletons ({len(X_singletons)}) moved to training set.")
+        except ValueError:
+            # Fallback: do a non-stratified split on the whole dataset
+            print("Stratified split failed on non-singleton classes; falling back to non-stratified split.")
+            X_train, X_test, y_train, y_test = train_test_split(
+                X_all, y_all, test_size=test_size, random_state=42, stratify=None
+            )
+    else:
+        # No singletons -> safe to stratify on all labels
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_all, y_all, test_size=test_size, random_state=42, stratify=y_all
+        )
+
     print(f"Data split complete. Training samples: {len(X_train)}, Testing samples: {len(X_test)}")
 
     print("\n--- Scaling Features ---")

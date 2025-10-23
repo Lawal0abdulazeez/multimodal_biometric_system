@@ -197,6 +197,8 @@ sample_id,subject_id,face,iris,fingerprint
 34_2,34,Face Iris fingerprint Data\TrainData\facedatatrain\34_2.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\34_2.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\34_2.jpg
 35_1,35,Face Iris fingerprint Data\TrainData\facedatatrain\35_1.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\35_1.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\35_1.jpg
 35_2,35,Face Iris fingerprint Data\TrainData\facedatatrain\35_2.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\35_2.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\35_2.jpg
+36_1,36,Face Iris fingerprint Data\TrainData\facedatatrain\36_1.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\36_1.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\36_1.jpg
+36_2,36,Face Iris fingerprint Data\TrainData\facedatatrain\36_2.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\36_2.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\36_2.jpg
 37_1,37,Face Iris fingerprint Data\TrainData\facedatatrain\37_1.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\37_1.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\37_1.jpg
 37_2,37,Face Iris fingerprint Data\TrainData\facedatatrain\37_2.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\37_2.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\37_2.jpg
 38_1,38,Face Iris fingerprint Data\TrainData\facedatatrain\38_1.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\38_1.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\38_1.jpg
@@ -249,6 +251,7 @@ sample_id,subject_id,face,iris,fingerprint
 59_2,59,Face Iris fingerprint Data\TrainData\facedatatrain\59_2.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\59_2.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\59_2.jpg
 5_1,5,Face Iris fingerprint Data\TrainData\facedatatrain\5_1.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\5_1.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\5_1.jpg
 5_2,5,Face Iris fingerprint Data\TrainData\facedatatrain\5_2.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\5_2.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\5_2.jpg
+60_1,60,Face Iris fingerprint Data\TrainData\facedatatrain\60_1.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\60_1.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\60_1.jpg
 61_1,61,Face Iris fingerprint Data\TrainData\facedatatrain\61_1.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\61_1.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\61_1.jpg
 61_2,61,Face Iris fingerprint Data\TrainData\facedatatrain\61_2.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\61_2.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\61_2.jpg
 62_1,62,Face Iris fingerprint Data\TrainData\facedatatrain\62_1.jpg,Face Iris fingerprint Data\TrainData\Lirisdatatrain\62_1.jpg,Face Iris fingerprint Data\TrainData\Lfingerdatatrain\62_1.jpg

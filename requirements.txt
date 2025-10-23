@@ -17,3 +17,6 @@ seaborn
 # Utilities
 tqdm
 joblib
+
+opencv-python
+PIL

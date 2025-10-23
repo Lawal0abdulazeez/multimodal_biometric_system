@@ -3,6 +3,9 @@ import numpy as np
 from pathlib import Path
 import time
 
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)  # Suppress user warnings for cleaner output
+
 from src.models.ecgwo_svm import ECGWO_SVM
 
 # --- Configuration ---
@@ -50,9 +53,9 @@ def train_model():
     # To improve performance, increase them.
     print("Initializing ECGWO-SVM model...")
     ecgwo_svm_model = ECGWO_SVM(
-        num_wolves=200,      # Reduced for faster initial run
-        max_iter_feat=500,  # Reduced for faster initial run
-        max_iter_param=500, # Reduced for faster initial run
+        num_wolves=20,      # Reduced for faster initial run
+        max_iter_feat=50,  # Reduced for faster initial run
+        max_iter_param=50, # Reduced for faster initial run
         alpha=0.99
     )
 

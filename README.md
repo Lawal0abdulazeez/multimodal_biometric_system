@@ -140,28 +140,33 @@ Execute the scripts in the following order from the project's root directory.
 
 **1. Create the Data Manifest:**
 This script scans your data folders and creates a master CSV file mapping all biometric samples.
-```bash
-python scripts/00_create_manifest.py
+```powershell
+python -m scripts.00_create_manifest
 ```
 
 **2. Preprocess Data and Create Splits:**
-This script reads the manifest, extracts features for all samples, filters the data for robustness, and performs a stratified train-test split.
-```bash
-python scripts/01_run_preprocessing.py
+This script reads the manifest, extracts features for all samples, fuses modalities, and performs a train/test split. Note: the preprocessing step now handles classes with only a single sample (singletons) by placing those samples into the training set so the stratified split does not fail. Processed feature arrays and label encoder are saved to `data/processed`.
+```powershell
+python -m scripts.01_run_preprocessing
 ```
+
+Notes about the preprocessing behavior:
+- If a class has only one sample in the dataset it cannot be stratified into train and test. The preprocessing script will move such singleton samples into the training set automatically and perform stratified splitting on the remaining classes.
+- If stratified splitting fails for the remaining data (extremely small/imbalanced datasets), the script will fall back to a non-stratified split to ensure processing completes.
 
 **3. Train the ECGWO-SVM Model:**
 This is the most time-consuming step. It runs the two-stage optimization and saves the final trained model to the `/models` directory.
 > **Note:** For a quick test, you can reduce `num_wolves` and `max_iter` values inside the script. For the final, high-performance model, use the recommended higher values (this may take several hours).
-```bash
-python scripts/02_run_training.py
+```powershell
+python -m scripts.02_run_training
 ```
 
 **4. Evaluate Models and Generate Reports:**
 This script loads the trained model, evaluates it on the test set, and runs the baseline models for comparison. It generates the final report files.
-```bash
-python scripts/03_run_evaluation.py
+```powershell
+python -m scripts.03_run_evaluation
 ```
+`04_run_comparison.py`
 
 ## 📊 Interpreting the Results
 

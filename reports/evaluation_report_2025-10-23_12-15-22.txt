@@ -1,0 +1,29 @@
+2025-10-23 12:15:22,240 - INFO - --- Starting Model Evaluation ---
+2025-10-23 12:15:22,240 - INFO - Loading test data...
+2025-10-23 12:15:22,282 - INFO - 
+--- DIAGNOSTIC INFO ---
+2025-10-23 12:15:22,282 - INFO - Number of unique labels in Training set: 170
+2025-10-23 12:15:22,282 - INFO - Number of unique labels in Testing set: 169
+2025-10-23 12:15:22,282 - INFO - OK: All labels in the test set are present in the training set.
+2025-10-23 12:15:22,282 - INFO - --- END DIAGNOSTIC ---
+
+2025-10-23 12:15:22,303 - INFO - 
+==================================================
+2025-10-23 12:15:22,303 - INFO -         PERFORMANCE OF OUR PROPOSED ECGWO-SVM MODEL
+2025-10-23 12:15:22,303 - INFO - ==================================================
+2025-10-23 12:15:24,977 - INFO - 
+==================================================
+2025-10-23 12:15:24,977 - INFO -         PERFORMANCE OF BASELINE MODELS
+2025-10-23 12:15:24,977 - INFO - ==================================================
+2025-10-23 12:15:24,977 - INFO - 
+--- Training Baseline 1: SVM with GridSearchCV ---
+2025-10-23 12:15:24,977 - WARNING - The smallest class in the training set has only 1 member(s).
+2025-10-23 12:15:24,977 - WARNING - Skipping GridSearchCV and training a default SVC instead.
+2025-10-23 12:15:25,583 - INFO - Evaluating default SVC...
+2025-10-23 12:15:28,174 - INFO - 
+--- Training Baseline 2: Random Forest ---
+2025-10-23 12:15:32,609 - INFO - 
+==================================================
+2025-10-23 12:15:32,609 - INFO - Evaluation complete.
+2025-10-23 12:15:32,609 - INFO - Full text report saved to: reports\evaluation_report_2025-10-23_12-15-22.txt
+2025-10-23 12:15:32,609 - INFO - Structured JSON results saved to: reports\evaluation_results_2025-10-23_12-15-22.json

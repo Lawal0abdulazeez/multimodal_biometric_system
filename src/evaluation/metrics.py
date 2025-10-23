@@ -1,6 +1,6 @@
 # src/evaluation/metrics.py
 import numpy as np
-from sklearn.metrics import accuracy_score, precision_score
+from sklearn.metrics import accuracy_score, precision_score, confusion_matrix, recall_score
 from sklearn.preprocessing import label_binarize
 import warnings # <-- Import the warnings module
 
@@ -62,46 +62,110 @@ def calculate_eer(y_true, y_scores):
     
     return eer, eer_threshold
 
-def evaluate_performance(model, X_test, y_test):
+def calculate_confusion_matrix_metrics(y_true, y_pred):
+    """
+    Calculates TP, FN, TN, FP from confusion matrix for multi-class problems.
+    Returns averaged values across all classes using one-vs-rest approach.
+    """
+    classes = np.unique(y_true)
+    n_classes = len(classes)
+    
+    tp_list, fn_list, tn_list, fp_list = [], [], [], []
+    
+    for cls in classes:
+        # Convert to binary classification: current class vs rest
+        y_true_binary = (y_true == cls).astype(int)
+        y_pred_binary = (y_pred == cls).astype(int)
+        
+        # Calculate TP, FN, TN, FP for this class
+        tp = np.sum((y_true_binary == 1) & (y_pred_binary == 1))
+        fn = np.sum((y_true_binary == 1) & (y_pred_binary == 0))
+        tn = np.sum((y_true_binary == 0) & (y_pred_binary == 0))
+        fp = np.sum((y_true_binary == 0) & (y_pred_binary == 1))
+        
+        tp_list.append(tp)
+        fn_list.append(fn)
+        tn_list.append(tn)
+        fp_list.append(fp)
+    
+    # Return average values across all classes
+    return np.mean(tp_list), np.mean(fn_list), np.mean(tn_list), np.mean(fp_list)
+
+def evaluate_performance(model, X_test, y_test, threshold=0.5, training_time=None):
     """
     Calculates a comprehensive set of performance metrics for the model.
+    
+    Args:
+        model: Trained model with predict and predict_proba methods
+        X_test: Test features
+        y_test: True test labels
+        threshold: Threshold for FAR/FRR calculation (default 0.5)
+        training_time: Training time in seconds (optional)
+    
+    Returns:
+        dict: Dictionary containing all performance metrics
     """
     # --- NEW: Suppress specific UserWarnings from sklearn ---
-    # We are intentionally ignoring the warning about "y could represent a regression problem"
-    # because we know our data structure and have handled it.
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=UserWarning)
 
         print("\n--- Evaluating Model Performance ---")
         
-        # 1. Standard Metrics
+        # 1. Get predictions
         y_pred = model.predict(X_test)
+        
+        # 2. Calculate confusion matrix metrics
+        tp, fn, tn, fp = calculate_confusion_matrix_metrics(y_test, y_pred)
+        
+        # 3. Calculate standard metrics
         accuracy = accuracy_score(y_test, y_pred)
         precision = precision_score(y_test, y_pred, average='weighted', zero_division=0)
+        recall = recall_score(y_test, y_pred, average='weighted', zero_division=0)
         
+        # 4. Calculate Specificity and Sensitivity
+        # Specificity = TN / (TN + FP)
+        specificity = tn / (tn + fp) if (tn + fp) > 0 else 0.0
+        
+        # Sensitivity = TP / (TP + FN) - same as recall
+        sensitivity = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        
+        print(f"TP: {tp:.2f}, FN: {fn:.2f}, TN: {tn:.2f}, FP: {fp:.2f}")
         print(f"Accuracy: {accuracy * 100:.2f}%")
         print(f"Precision (Weighted): {precision:.4f}")
+        print(f"Recall/Sensitivity: {recall:.4f}")
+        print(f"Specificity: {specificity:.4f}")
         
-        # 2. Biometric-specific Metrics
+        # 5. Biometric-specific Metrics (FAR, FRR, EER)
         try:
             y_scores = model.predict_proba(X_test)
+            
+            far, frr = calculate_far_frr(y_test, y_scores, threshold=threshold)
+            print(f"FAR (at threshold={threshold}): {far * 100:.2f}%")
+            print(f"FRR (at threshold={threshold}): {frr * 100:.2f}%")
+            
+            print("Calculating EER...")
+            eer, eer_threshold = calculate_eer(y_test, y_scores)
+            print(f"Equal Error Rate (EER): {eer * 100:.2f}% (at threshold={eer_threshold:.3f})")
         except Exception as e:
             print(f"Could not get probability scores, skipping FAR/FRR/EER calculation. Error: {e}")
-            return {} # Return empty dict on failure
+            far, frr, eer, eer_threshold = 0.0, 0.0, 0.0, threshold
 
-        far_at_50, frr_at_50 = calculate_far_frr(y_test, y_scores, threshold=0.5)
-        print(f"FAR (at threshold=0.5): {far_at_50 * 100:.2f}%")
-        print(f"FRR (at threshold=0.5): {frr_at_50 * 100:.2f}%")
-        
-        print("Calculating EER...")
-        eer, eer_threshold = calculate_eer(y_test, y_scores)
-        print(f"Equal Error Rate (EER): {eer * 100:.2f}% (at threshold={eer_threshold:.3f})")
-
+        # 6. Compile all results
         results = {
-            "accuracy": accuracy,
+            "tp": float(tp),
+            "fn": float(fn),
+            "tn": float(tn),
+            "fp": float(fp),
+            "far": far,
+            "frr": frr,
+            "err": eer,  # ERR is same as EER
+            "specificity": specificity,
+            "sensitivity": sensitivity,
             "precision": precision,
-            "far_at_50": far_at_50,
-            "frr_at_50": frr_at_50,
-            "eer": eer
+            "accuracy": accuracy,
+            "recall": recall,
+            "threshold": eer_threshold,
+            "training_time": training_time if training_time else 0.0
         }
+        
         return results
